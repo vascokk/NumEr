@@ -1,0 +1,15 @@
+case os:getenv("TARGET_ARCH") of
+    false -> CONFIG; % env var not defined
+    []    -> CONFIG; % env var set to empty string
+    "x64" ->
+			lists:keystore(port_envs, 1, CONFIG, {port_envs, [{"(linux)", "CXX", "clang++"},
+			{"(linux)", "NVCCFLAGS", "-arch=sm_20 -O2 -c -Xcompiler -shared -Xcompiler -fPIC"},
+			{"(linux)", "LDFLAGS", "$LDFLAGS c_src/numer_ops.o -lcuda -L/usr/local/cuda/lib64 -lcudart -lstdc++"},
+			{"(linux)", "CXXFLAGS", "$CXXFLAGS -O2 -I/usr/local/cuda/include"},
+
+			{"win32", "CC", "C:\\Progra~2\\Micros~2.0\\VC\\bin\\amd64\\cl.exe"},
+			{"win32", "CXX","C:\\Progra~2\\Micros~2.0\\VC\\bin\\amd64\\cl.exe"},
+			{"win32", "LINKER",  "C:\\Progra~2\\Micros~2.0\\VC\\bin\\amd64\\link.exe"},
+			{"win32", "CXXFLAGS", "$CXXFLAGS -O2 /I \"c:\\Progra~1\\NVIDIA~2\\CUDA\\v5.0\\include\""},
+			{"win32", "LDFLAGS", "$LDFLAGS  /VERBOSE:LIB /LIBPATH:c:\\Progra~1\\NVIDIA~2\\CUDA\\v5.0\\lib\\x64 cuda.lib  cudart.lib cublas.lib cublas_device.lib c_src/numer_nifs.o c_src/numer_blas_nifs.o c_src/numer_kernel_nifs.o c_src/numer_blas.o c_src/numer_cublas_wrappers.o c_src/numer_float_buffer.o c_src/numer_kernels.o c_src/numer_matrix_float_buffer.o c_src/numer_ml.o c_src/numer_ml_nifs.o "}]})      
+end.

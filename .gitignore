@@ -1,0 +1,13 @@
+ebin/*
+priv/*
+.eunit
+c_src/*.o
+c_src/*.obj
+nvcc_compile.cmd
+numer.sublime-project
+numer.sublime-workspace
+tests.txt
+*.swp
+*~
+*.pdb
+tmp/*
