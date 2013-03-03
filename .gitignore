@@ -11,3 +11,4 @@ tests.txt
 *~
 *.pdb
 tmp/*
+*.txt

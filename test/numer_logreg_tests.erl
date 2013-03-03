@@ -4,7 +4,7 @@
 -include_lib("eunit/include/eunit.hrl").
 
 readfile_test() ->
-	Lines = fennec_logreg:readfile(ex2data1.txt, "\r\n").
+	Lines = fennec_logreg:readfile("ex2data1.txt", "\r\n").
 
 bin_to_num(Elem) ->
     try list_to_float(Elem)
@@ -17,7 +17,7 @@ readfile(FileName, EOL) ->
     [[bin_to_num(X) || X<-string:tokens(Y, ",")] || Y<-Lines].
 
 cost_test() ->
-	TrainSet = fennec_logreg:readfile(ex2data1.txt, "\r\n"),
+	TrainSet = fennec_logreg:readfile("ex2data1.txt", "\r\n"),
 	_m = length(TrainSet), % number of training examples
 	Theta = [0,0,0], %
 	X = [ lists:append([1.0], lists:sublist(TrEx, 2)) || TrEx<-TrainSet], %[1.0] - adding the bias term
@@ -27,7 +27,7 @@ cost_test() ->
 	?assertEqual( [0.693147], Cost).
 
 gradient_test() ->
-	TrainSet = fennec_logreg:readfile(ex2data1.txt, "\r\n"),
+	TrainSet = fennec_logreg:readfile("ex2data1.txt", "\r\n"),
 	_m = length(TrainSet), % number of training examples
 	Theta = [0,0,0], %
 	X = [ lists:append([1.0], lists:sublist(TrEx, 2)) || TrEx<-TrainSet], %[1.0] - adding the bias term
@@ -55,7 +55,7 @@ learn_buf_test_() ->
 %            end}.
 
 learn() ->
-	TrainSet = fennec_logreg:readfile(ex2data1.txt, "\r\n"),
+	TrainSet = fennec_logreg:readfile("ex2data1.txt", "\r\n"),
 	_m = length(TrainSet), % number of training examples
 	Theta = [0,0,0], %
 	X = [ lists:append([1.0], lists:sublist(TrEx, 2)) || TrEx<-TrainSet], %[1.0] - adding the bias term
@@ -66,7 +66,7 @@ learn() ->
 learn_buf() ->
 	{ok, Ctx} = numer_context:new(),
 	%TrainSet = numer_logreg:readfile(ex2data1.txt, "\r\n"),
-	TrainSet = readfile(ex2data1.txt, "\r\n"),
+	TrainSet = readfile("ex2data1.txt", "\r\n"),
 	_m = length(TrainSet), % number of training examples
 	Theta = [0,0,0],%
 	X = [ lists:append([1.0], lists:sublist(TrEx, 2)) || TrEx<-TrainSet], %[1.0] - adding the bias term
@@ -86,7 +86,7 @@ learn_buf() ->
 learn_buf2_test() ->
 	{ok, Ctx} = numer_context:new(),
 	%TrainSet = numer_logreg:readfile(ex2data1.txt, "\r\n"),
-	TrainSet = readfile(ex2data1.txt, "\r\n"),
+	TrainSet = readfile("ex2data1.txt", "\r\n"),
 	_m = length(TrainSet), % number of training examples
 	Theta = [0,0,0],%
 	X = [ lists:append([1.0], lists:sublist(TrEx, 2)) || TrEx<-TrainSet], %[1.0] - adding the bias term
@@ -114,7 +114,7 @@ learn_buf2_test() ->
 	
 cost_buf_test() ->
 	{ok, Ctx} = numer_context:new(),
-	TrainSet = fennec_logreg:readfile(ex2data1.txt, "\r\n"),
+	TrainSet = fennec_logreg:readfile("ex2data1.txt", "\r\n"),
 	_m = length(TrainSet), % number of training examples
 	Theta = [[0,0,0]], %
 	X = [ lists:append([1.0], lists:sublist(TrEx, 2)) || TrEx<-TrainSet], %[1.0] - adding the bias term
@@ -132,7 +132,7 @@ cost_buf_test() ->
 
 gradient_buf_test() ->
 	{ok, Ctx} = numer_context:new(),
-	TrainSet = fennec_logreg:readfile(ex2data1.txt, "\r\n"),
+	TrainSet = fennec_logreg:readfile("ex2data1.txt", "\r\n"),
 	_m = length(TrainSet), % number of training examples
 	Theta = [[0,0,0]], %
 	X = [ lists:append([1.0], lists:sublist(TrEx, 2)) || TrEx<-TrainSet], %[1.0] - adding the bias term

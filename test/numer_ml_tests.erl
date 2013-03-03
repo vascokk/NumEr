@@ -16,7 +16,7 @@ readfile(FileName, EOL) ->
 
 gd_test() ->	
 	{ok, Ctx} = numer_context:new(),
-	TrainSet = readfile(ex2data1.txt, "\r\n"),
+	TrainSet = readfile("ex2data1.txt", "\r\n"),
 	_m = length(TrainSet), % number of training examples
 	Theta = [0,0,0], %	
 	X = [ lists:append([1.0], lists:sublist(TrEx, 2)) || TrEx<-TrainSet], %[1.0] - adding the bias term
@@ -34,7 +34,7 @@ gd_test() ->
 
 gd_learn_test() ->	
 	{ok, Ctx} = numer_context:new(),
-	TrainSet = readfile(ex2data1.txt, "\r\n"),
+	TrainSet = readfile("ex2data1.txt", "\r\n"),
 	_m = length(TrainSet), % number of training examples
 	Theta = [0,0,0], %
 	X = [ lists:append([1.0], lists:sublist(TrEx, 2)) || TrEx<-TrainSet], %[1.0] - adding the bias term

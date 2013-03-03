@@ -41,9 +41,9 @@ void Ml<T>::gradient_descent(cublasHandle_t handle, thrust::device_vector<T> *d_
     bw.cublasGemm(handle, CUBLAS_OP_N, CUBLAS_OP_T, 1, num_samples, num_features, &alf, thrust::raw_pointer_cast(d_theta->data()), lda, thrust::raw_pointer_cast(d_x->data()), ldb, &bet, thrust::raw_pointer_cast(d_tmp1.data()), ldc);
     //% H=sigmoid(Theta*X)
     thrust::device_vector<T> d_h(d_y->size());
-    thrust::transform(d_tmp1.begin(), d_tmp1.end(), d_h.begin(), Kernels<T>::sigmoid());
+    thrust::transform(d_tmp1.begin(), d_tmp1.end(), d_h.begin(), typename Kernels<T>::sigmoid());
     //%H - Y
-    thrust::transform(d_y->begin(), d_y->end(), d_h.begin(), d_h.begin(), NumErBlas<T>::saxpy_functor(-1.0));
+    thrust::transform(d_y->begin(), d_y->end(), d_h.begin(), d_h.begin(), typename NumErBlas<T>::saxpy_functor(-1.0));
     const T alpha2 = 1.0/num_samples;    
     //const float *alpha2 = &alf2;
     bw.cublasGemm(handle, CUBLAS_OP_N, CUBLAS_OP_N, 1, num_features, num_samples, &alpha2, thrust::raw_pointer_cast(d_h.data()), lda, thrust::raw_pointer_cast(d_x->data()), ldb, &bet, thrust::raw_pointer_cast(d_theta->data()), ldc);
@@ -72,7 +72,7 @@ void Ml<T>::numer_gd_learn(thrust::device_vector<T> *d_theta, thrust::device_vec
 
     for(int i=0; i<iterations; i++){
         gradient_descent(handle, d_theta, d_x, d_y, num_features, num_samples);
-        thrust::transform(d_theta->begin(), d_theta->end(), d_theta_tmp.begin(), d_theta_tmp.begin(),  NumErBlas<T>::saxpy_functor(-learning_rate));
+        thrust::transform(d_theta->begin(), d_theta->end(), d_theta_tmp.begin(), d_theta_tmp.begin(),  typename NumErBlas<T>::saxpy_functor(-learning_rate));
         *d_theta = d_theta_tmp;
     }
     // Destroy the handle

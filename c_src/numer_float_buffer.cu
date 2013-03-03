@@ -66,15 +66,15 @@ void NumerFloatBuffer<T>::write(ErlNifEnv *env, ERL_NIF_TERM data) {
     }
 
     this->_size = this->h_data->size();
-
+/*
     if(!DOUBLE_PRECISION){
         this->d_data->clear();
         std::transform(this->h_data->begin(), this->h_data->end(),  std::back_inserter(*(this->d_data)), CastToFloat());
     }
-    else
+    else*/
         *(this->d_data) = *(this->h_data);
 
-    cudaDeviceSynchronize();
+    //cudaDeviceSynchronize();
 }
 
 template<typename T> 

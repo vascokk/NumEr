@@ -17,7 +17,7 @@
 template<typename T>
 NumerMatrixFloatBuffer<T>::NumerMatrixFloatBuffer():NumerFloatBuffer<T>() {
     this->_rows = 1;
-    this->_cols = h_data->size();
+    this->_cols = this->h_data->size();
 }
 
 template<typename T>
@@ -75,7 +75,7 @@ void NumerMatrixFloatBuffer<T>::write(ErlNifEnv *env, ERL_NIF_TERM data) {
         }
     }
 
-    d_data->resize(h_data->size());
+    this->d_data->resize(this->h_data->size());
     thrust::copy(this->h_data->begin(), this->h_data->end(), this->d_data->begin());
     //*d_data = *h_data;
     cudaDeviceSynchronize();
@@ -93,9 +93,9 @@ ERL_NIF_TERM NumerMatrixFloatBuffer<T>::toErlTerms(ErlNifEnv *env) {
     std::vector<ERL_NIF_TERM> rows;
     
 
-    h_data->clear();
-    h_data->resize(d_data->size());
-    thrust::copy(d_data->begin(), d_data->end(), h_data->begin());
+    this->h_data->clear();
+    this->h_data->resize(this->d_data->size());
+    thrust::copy(this->d_data->begin(), this->d_data->end(), this->h_data->begin());
 
 
     if(this->rows() > 1 && this->orientation == ROW_MAJOR){
@@ -104,7 +104,7 @@ ERL_NIF_TERM NumerMatrixFloatBuffer<T>::toErlTerms(ErlNifEnv *env) {
             rows.push_back(row);
         }
         
-        for (iter = h_data->end(); iter != h_data->begin(); ) {
+        for (iter = this->h_data->end(); iter != this->h_data->begin(); ) {
                 --iter;
                 Ridx = IDX2RCM(idx,R);
                 rows[Ridx] = enif_make_list_cell(env, enif_make_double(env, (double)*iter), rows[Ridx]);
@@ -115,7 +115,7 @@ ERL_NIF_TERM NumerMatrixFloatBuffer<T>::toErlTerms(ErlNifEnv *env) {
         };
     }else{
         if (this->h_data->size() > 0) {
-            for (iter = h_data->end(); iter != h_data->begin();) {
+            for (iter = this->h_data->end(); iter != this->h_data->begin();) {
                 --iter;
                 retval = enif_make_list_cell(env, enif_make_double(env, (double)*iter), retval);
             }
