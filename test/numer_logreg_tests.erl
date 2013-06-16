@@ -3,8 +3,7 @@
 -include("numer.hrl").
 -include_lib("eunit/include/eunit.hrl").
 
-readfile_test() ->
-	Lines = fennec_logreg:readfile("ex2data1.txt", "\r\n").
+
 
 bin_to_num(Elem) ->
     try list_to_float(Elem)
@@ -16,13 +15,16 @@ readfile(FileName, EOL) ->
     Lines = string:tokens(erlang:binary_to_list(Binary), EOL),
     [[bin_to_num(X) || X<-string:tokens(Y, ",")] || Y<-Lines].
 
+readfile_test() ->
+	Lines = readfile("ex2data1.txt", "\r\n").
+
 cost_test() ->
-	TrainSet = fennec_logreg:readfile("ex2data1.txt", "\r\n"),
+	TrainSet = readfile("ex2data1.txt", "\r\n"),
 	_m = length(TrainSet), % number of training examples
 	Theta = [0,0,0], %
 	X = [ lists:append([1.0], lists:sublist(TrEx, 2)) || TrEx<-TrainSet], %[1.0] - adding the bias term
 	Y = lists:append( [ lists:sublist(TrEx, 3,3) || TrEx<-TrainSet] ),  
-	Cost = fennec_logreg:cost(Theta, X, Y),	
+	Cost = numer_logreg:cost(Theta, X, Y),	
 	?debugMsg(io_lib:format("~n Cost:~p",[Cost])),
 	?assertEqual( [0.693147], Cost).
 
@@ -32,7 +34,7 @@ gradient_test() ->
 	Theta = [0,0,0], %
 	X = [ lists:append([1.0], lists:sublist(TrEx, 2)) || TrEx<-TrainSet], %[1.0] - adding the bias term
 	Y = lists:append( [ lists:sublist(TrEx, 3,3) || TrEx<-TrainSet] ),  
-	Grad = fennec_logreg:gradient_descent(Theta, X, Y),	
+	Grad = numer_logreg:gradient_descent(Theta, X, Y),	
 	
 	?debugMsg(io_lib:format("~n Gradient:~p",[Grad])).
 
@@ -48,19 +50,13 @@ learn_buf_test_() ->
                   learn_buf()
            end}.
 
-% learn_buf_test2_() ->
-%           {timeout, 60*60,
-%            fun() ->
-%                   learn_buf2()
-%            end}.
-
 learn() ->
-	TrainSet = fennec_logreg:readfile("ex2data1.txt", "\r\n"),
+	TrainSet = readfile("ex2data1.txt", "\r\n"),
 	_m = length(TrainSet), % number of training examples
 	Theta = [0,0,0], %
 	X = [ lists:append([1.0], lists:sublist(TrEx, 2)) || TrEx<-TrainSet], %[1.0] - adding the bias term
 	Y = lists:append( [ lists:sublist(TrEx, 3,3) || TrEx<-TrainSet] ),  
-	[Theta_final, J_hist] = fennec_logreg:learn(Theta, X, Y, 0.01, 10, []) ,	
+	[Theta_final, J_hist] = numer_logreg:learn(Theta, X, Y, 0.01, 10, []) ,	
 	?debugMsg(io_lib:format("~n Learned:~p",[[Theta_final, J_hist]])).
 
 learn_buf() ->
