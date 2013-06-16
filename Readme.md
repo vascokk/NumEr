@@ -29,7 +29,7 @@ rebar compile
 rebar eunit suites=numer_helpers
 ```
 
-TODO: MaxOS and Linux
+TODO: Mac OS X and Linux
 
 Creating vectors and matrices
 ------------------------------
