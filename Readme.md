@@ -123,7 +123,7 @@ gemv_test()->
 Using "helpers" module
 ----------------------
 
-Since using buffer operations can make the code awkward to read, there is also a helper module - numer\_helpers.erl, wich can be used for prototyping the algorithms. WARNING - it is extremely slow and suitable ONLY for prototyping. Here is how you can use it:
+Since using buffer operations can make the code awkward to read, there is also a helper module - numer\_helpers.erl, wich can be used for prototyping the algorithms. WARNING - it is extremely slow and suitable ONLY for prototyping or single operations (do not use this module in iterative algorithms). Here is how you can use it:
 
 ``` erlang
 gemv_2_test()->
