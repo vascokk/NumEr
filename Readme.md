@@ -144,6 +144,7 @@ There is an implementation of the Logistic Regression (without regularization) a
 
 ``` bash
 rebar eunit suites=numer_logreg_tests tests=learn_buf2_test
+
 NOTICE: Using experimental option 'tests'
     Running test function(s):
       numer_logreg_tests:learn_buf2_test/0
