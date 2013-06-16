@@ -63,7 +63,7 @@ module 'numer_helpers_tests'
 
 TODO: Mac OS X and Linux
 
-Creating vectors and matrices
+Operations with vectors and matrices
 ------------------------------
 
 ``` erlang
