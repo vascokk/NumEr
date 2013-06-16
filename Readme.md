@@ -1,7 +1,8 @@
 
+This is a collection of Erlang NIF functions for BLAS operations on vectors and matrices. Both are natively implemented as Thrust host/device vectors and special "buffer" classes are used to transfer them from Erlang to CUDA and back. 
 
-On Windows x64
---------------
+Installation on Windows x64
+---------------------------
 
 ``` bash
 git clone git://github.com/vascokk/NumEr.git
@@ -79,6 +80,7 @@ X = [2.0,5.0,1.0,7.0].
 {ok, Buf_X} = numer_nifs:new_float_buffer(Ctx).
 numer_nifs:write_buffer(Buf_X, X).
 ```
+As you see one of the parameters in the matrix buffer is "?ROW_MAJOR". It is kinda borrowed from Boost library, but not yet fully implemented in NumEr. Currently only row-major matrices are supported. However, under the hood in the Thrust vectors the numbers are stored in column-major format. I chose to do it in this way, because the CUBLAS library is using column-major storage - being a derivative of the FORTRAN BLAS library.
 
 There are several modules, which are wrappers for the NIF functions, like: numer\_blas.erl - for BLAS operations, numer\_buffer.erl - for operations with buffers (new, delete, read, write), etc.
 
