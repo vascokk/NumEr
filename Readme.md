@@ -22,7 +22,7 @@ With this line inside:
 call "C:\Program Files\Microsoft SDKs\Windows\v7.1\Bin\SetEnv.cmd" /x64
 ```
 
-Run the bat file.
+Run the above bat file and compile:
 
 ``` bash
 rebar compile
@@ -31,7 +31,8 @@ rebar eunit suites=numer_helpers
 
 TODO: MaxOS and Linux
 
-Creating vectors and matrices:
+Creating vectors and matrices
+------------------------------
 
 ``` erlang
 % this is a row-major matrix:
@@ -59,6 +60,7 @@ Using numer\_buffer module, the above example will look like:
 ``` 
 
 BLAS GEMV example:
+------------------
 
 ``` erlang
 %  GEMV: y <- α op ( A ) x + β y
@@ -84,6 +86,9 @@ gemv_test()->
     ok = numer_context:destroy(Ctx).
 ```
 
+Using "helper" module
+----------------------
+
 Since using buffer operations can make the code awkward to read, there is also a helper module - numer\_helpers.erl, wich can be used for prototyping the algorithms. WARNING - it is extremely slow and suitable ONLY for prototyping. Here is how you can use it:
 
 ``` erlang
@@ -97,6 +102,9 @@ gemv_2_test()->
 ```
 
 It is much more readable and useful for one-time calculations, but in the ML "training" stage (with hundreds of iterations) it will be unusable, due to the multiple buffer transfers. 
+
+"Logistic Regression"
+---------------------
 
 There is an implementation of the Logistic Regression (without regularization) algorithm. Take a look at the numer\_logreg.erl module.
 
