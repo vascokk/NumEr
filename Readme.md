@@ -84,4 +84,22 @@ gemv_test()->
     ok = numer_context:destroy(Ctx).
 ```
 
-See more at: http://vas.io/blog/2013/03/23/machine-learning-in-erlang-and-cuda/
+Since using buffer operations can make the code awkward to read, there is also a helper module - numer\_helpers.erl, wich can be used for prototyping the algorithms. WARNING - it is extremely slow and suitable ONLY for prototyping. Here is how you can use it:
+
+``` erlang
+gemv_2_test()->
+    A = [[4.0,6.0,8.0,2.0],[5.0,7.0,9.0,3.0]],
+    _alpha = 1.0,
+    _beta = 0.0,
+    X = [2.0,5.0,1.0,7.0],
+    Res = numer_helpers:gemv(no_transpose , _alpha, A, X, _beta, []),
+    ?assertEqual([60.0,75.0], Res).
+```
+
+It is much more readable and useful for one-time calculations, but in the ML "training" stage (with hundreds of iterations) it will be unusable, due to the multiple buffer transfers. 
+
+There is an implementation of the Logistic Regression (without regularization) algorithm. Take a look at the numer\_logreg.erl module.
+
+The numer\_ml.erl module contains a C++ implementation (via NIFs) of Logistic Regression, while the numer\_logreg.erl is using buffers and numer_blas NIFs. The first one I used to compare the speed between all-native and buffers+NIFs implementations.
+
+The project is still a work in progress and needs a lot of polishing and if anyone is willing to give a hand I'll be more than happy. Any suggestions to improve the framework are also very welcome.
