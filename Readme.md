@@ -26,7 +26,39 @@ Run the above bat file and compile:
 
 ``` bash
 rebar compile
-rebar eunit suites=numer_helpers
+rebar eunit suites=numer_helpers_tests
+```
+
+You should see:
+
+``` bash
+==> numer (eunit)
+======================== EUnit ========================
+module 'numer_helpers_tests'
+  numer_helpers_tests: gemm_test...[0.421 s] ok
+  numer_helpers_tests: gemm_2_test...[0.375 s] ok
+  numer_helpers_tests: sum_by_cols_test...[0.375 s] ok
+  numer_helpers_tests: gemv_test...[0.437 s] ok
+  numer_helpers_tests: gemv_2_test...[0.421 s] ok
+  numer_helpers_tests: gemv_3_test...[0.405 s] ok
+  numer_helpers_tests: saxpy_test...[0.390 s] ok
+  numer_helpers_tests: smm_test...[0.390 s] ok
+  numer_helpers_tests: m2v_test...ok
+  numer_helpers_tests: v2m_test...ok
+  numer_helpers_tests: transpose_test...[0.390 s] ok
+  numer_helpers_tests: sigmoid_test...[0.390 s] ok
+  numer_helpers_tests: sigmoid_2_test...[0.453 s] ok
+  numer_helpers_tests: tanh_test...[0.390 s] ok
+  numer_helpers_tests: tanh_2_test...[0.406 s] ok
+  numer_helpers_tests: log_test...[0.390 s] ok
+  numer_helpers_tests: log_2_test...[0.390 s] ok
+  numer_helpers_tests: ones_test...ok
+  numer_helpers_tests: ones_2_test...ok
+  numer_helpers_tests: zeros_test...ok
+  numer_helpers_tests: zeros_2_test...ok
+  [done in 6.349 s]
+=======================================================
+  All 21 tests passed.
 ```
 
 TODO: Mac OS X and Linux
