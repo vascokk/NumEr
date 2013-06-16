@@ -32,9 +32,9 @@ sum_by_cols(Matrix) ->
     _n = length(hd(Matrix)), %columns A
     _alpha = 1.0,
     _beta = 0.0,
-    {ok, Ones} = numer_buffer:ones(float, _m),  
-    {ok, Buf_M} = numer_buffer:new(matrix, float, row_major, Matrix),
-    {ok, Buf_Sum} = numer_buffer:new(float, _m),
+    {ok, Ones} = numer_buffer:ones(Ctx, float, _m),  
+    {ok, Buf_M} = numer_buffer:new(Ctx, matrix, float, row_major, Matrix),
+    {ok, Buf_Sum} = numer_buffer:new(Ctx, float, _m),
     ok = numer_blas:gemv(Ctx, no_transpose , _m, _n, _alpha, Buf_M, Ones, _beta, Buf_Sum),
     {ok, Res} = numer_buffer:read(Buf_Sum),
     ok = numer_buffer:destroy(Buf_M),
@@ -56,12 +56,12 @@ gemv(_transpose_A, _alpha, A, X, _beta, Y) when is_list(hd(A)) ->
     		  	   _->  _m = length(hd(A)),
     		  		    _n = length(A)
     end,
-    {ok, Buf_A} = numer_buffer:new(matrix, float, row_major, A),
-    {ok, Buf_X} = numer_buffer:new(float), 
+    {ok, Buf_A} = numer_buffer:new(Ctx, matrix, float, row_major, A),
+    {ok, Buf_X} = numer_buffer:new(Ctx, float), 
     numer_buffer:write(Buf_X, X), 
     case Y of
-    	[] -> {ok, Buf_Y} = numer_buffer:zeros(float, _m);
-    	 _ -> {ok, Buf_Y} = numer_buffer:new(float),
+    	[] -> {ok, Buf_Y} = numer_buffer:zeros(Ctx, float, _m);
+    	 _ -> {ok, Buf_Y} = numer_buffer:new(Ctx, float),
     	 	  numer_buffer:write(Buf_Y, Y)		
     end, 
     ok = numer_blas:gemv(Ctx, _transpose_A , _m, _n, _alpha, Buf_A, Buf_X, _beta, Buf_Y),
@@ -75,9 +75,9 @@ gemv(_transpose_A, _alpha, A, X, _beta, Y) when is_list(hd(A)) ->
 -spec saxpy(float(), float_vector(), float_vector() ) -> float_vector().
 saxpy(_a, X, Y) ->
     {ok, Ctx} = numer_context:new(), 
-    {ok, Buf_X} = numer_buffer:new(float),
+    {ok, Buf_X} = numer_buffer:new(Ctx, float),
     ok = numer_buffer:write(Buf_X, X),
-    {ok, Buf_Y} = numer_buffer:new(float),
+    {ok, Buf_Y} = numer_buffer:new(Ctx, float),
     ok = numer_buffer:write(Buf_Y, Y),
     ok = numer_blas:saxpy(Ctx, _a, Buf_X, Buf_Y),
     {ok, Res} = numer_buffer:read(Buf_Y),
@@ -99,11 +99,11 @@ gemm(_transpose_A, _transpose_B, _alpha, A, B, _beta, C) ->
     	no_transpose -> _n = length(hd(B));%num_cols transpose_op(B) and C
     		  	   _->  _n = length(B)
     end,
-    {ok, Buf_A} = numer_buffer:new(matrix, float, row_major,A),
-    {ok, Buf_B} = numer_buffer:new(matrix, float, row_major,B),
+    {ok, Buf_A} = numer_buffer:new(Ctx, matrix, float, row_major,A),
+    {ok, Buf_B} = numer_buffer:new(Ctx, matrix, float, row_major,B),
     case C of
-    	[] -> {ok, Buf_C} = numer_buffer:zeros(matrix, float, row_major, _m, _n);
-    	 _ -> {ok, Buf_C} = numer_buffer:new(matrix, float, row_major, C)
+    	[] -> {ok, Buf_C} = numer_buffer:zeros(Ctx, matrix, float, row_major, _m, _n);
+    	 _ -> {ok, Buf_C} = numer_buffer:new(Ctx, matrix, float, row_major, C)
     end,    
     ok = numer_blas:gemm(Ctx, _transpose_A, _transpose_B, _m, _n, _k, _alpha, Buf_A, Buf_B, _beta, Buf_C),
     {ok, Res} = numer_buffer:read(Buf_C),
@@ -117,15 +117,14 @@ smm(_alpha, A)->
     {ok, Ctx} = numer_context:new(),
     _m = length(A), %rows A
     _n = length(hd(A)), %columns A
-    {ok, Buf_A} = numer_buffer:new(matrix, float, row_major, A),
-    {ok, Buf_B} = numer_buffer:new(matrix, float, row_major, _m, _n),
+    {ok, Buf_A} = numer_buffer:new(Ctx, matrix, float, row_major, A),
+    {ok, Buf_B} = numer_buffer:new(Ctx, matrix, float, row_major, _m, _n),
     ok = numer_blas:smm(Ctx, _alpha, Buf_A, Buf_B),
     {ok, Res} = numer_buffer:read(Buf_B),
     ok = numer_buffer:destroy(Buf_A),
     ok = numer_buffer:destroy(Buf_B),
     ok = numer_context:destroy(Ctx),
     Res.
-
 
 -spec m2v(float_matrix()) -> float_vector().
 m2v(Matrix) ->
@@ -145,8 +144,8 @@ transpose(Matrix) ->
     Rows = length(Matrix),
     Cols = length(hd(Matrix)),
     {ok, Ctx} = numer_context:new(),
-    {ok, Buf_M} = numer_buffer:new(matrix, float, row_major, Matrix),
-    {ok, Buf_MT} =  numer_buffer:new(matrix, float, row_major, Cols, Rows),
+    {ok, Buf_M} = numer_buffer:new(Ctx, matrix, float, row_major, Matrix),
+    {ok, Buf_MT} =  numer_buffer:new(Ctx, matrix, float, row_major, Cols, Rows),
     ok = numer_blas:transpose(Ctx, Buf_M, Buf_MT),
     {ok, Res} = numer_buffer:read(Buf_MT),
     ok = numer_buffer:destroy(Buf_M),
@@ -158,8 +157,8 @@ transpose(Matrix) ->
              (float_vector()) -> float_vector().
 sigmoid(A) when is_list(hd(A)) ->
 	{ok, Ctx} = numer_context:new(),
-	{ok, Buf_A} = numer_buffer:new(matrix, float, row_major, A),
-	{ok, Buf_B} = numer_buffer:new(matrix, float, row_major, length(A), length(hd(A))),
+	{ok, Buf_A} = numer_buffer:new(Ctx, matrix, float, row_major, A),
+	{ok, Buf_B} = numer_buffer:new(Ctx, matrix, float, row_major, length(A), length(hd(A))),
 	
 	ok = numer_kernels:sigmoid(Ctx, Buf_A, Buf_B),
 	{ok, Res} = numer_buffer:read(Buf_B),
@@ -169,9 +168,9 @@ sigmoid(A) when is_list(hd(A)) ->
 	Res;
 sigmoid(A) when is_number(hd(A)) ->
 	{ok, Ctx} = numer_context:new(),
-	{ok, Buf_A} = numer_buffer:new(float),
+	{ok, Buf_A} = numer_buffer:new(Ctx, float),
 	numer_buffer:write(Buf_A, A),
-	{ok, Buf_B} = numer_buffer:new(float, length(A)),
+	{ok, Buf_B} = numer_buffer:new(Ctx, float, length(A)),
 	ok = numer_kernels:sigmoid(Ctx, Buf_A, Buf_B),
 	{ok, Res} = numer_buffer:read(Buf_B),
 	ok = numer_buffer:destroy(Buf_A),
@@ -183,8 +182,8 @@ sigmoid(A) when is_number(hd(A)) ->
              (float_vector()) -> float_vector().
 tanh(A) when is_list(hd(A)) ->
 	{ok, Ctx} = numer_context:new(),
-	{ok, Buf_A} = numer_buffer:new(matrix, float, row_major, A),
-	{ok, Buf_B} = numer_buffer:new(matrix, float, row_major, length(A), length(hd(A))),
+	{ok, Buf_A} = numer_buffer:new(Ctx, matrix, float, row_major, A),
+	{ok, Buf_B} = numer_buffer:new(Ctx, matrix, float, row_major, length(A), length(hd(A))),
 	
 	ok = numer_kernels:tanh(Ctx, Buf_A, Buf_B),
 	{ok, Res} = numer_buffer:read(Buf_B),
@@ -194,9 +193,9 @@ tanh(A) when is_list(hd(A)) ->
 	Res;
 tanh(A) when is_number(hd(A)) ->
 	{ok, Ctx} = numer_context:new(),
-	{ok, Buf_A} = numer_buffer:new(float),
+	{ok, Buf_A} = numer_buffer:new(Ctx, float),
 	numer_buffer:write(Buf_A, A),
-	{ok, Buf_B} = numer_buffer:new(float, length(A)),
+	{ok, Buf_B} = numer_buffer:new(Ctx, float, length(A)),
 	ok = numer_kernels:tanh(Ctx, Buf_A, Buf_B),
 	{ok, Res} = numer_buffer:read(Buf_B),
 	ok = numer_buffer:destroy(Buf_A),
@@ -208,8 +207,8 @@ tanh(A) when is_number(hd(A)) ->
          (float_vector()) -> float_vector().
 log(A) when is_list(hd(A)) ->
 	{ok, Ctx} = numer_context:new(),
-	{ok, Buf_A} = numer_buffer:new(matrix, float, row_major, A),
-	{ok, Buf_B} = numer_buffer:new(matrix, float, row_major, length(A), length(hd(A))),
+	{ok, Buf_A} = numer_buffer:new(Ctx, matrix, float, row_major, A),
+	{ok, Buf_B} = numer_buffer:new(Ctx, matrix, float, row_major, length(A), length(hd(A))),
 	
 	ok = numer_kernels:log(Ctx, Buf_A, Buf_B),
 	{ok, Res} = numer_buffer:read(Buf_B),
@@ -219,9 +218,9 @@ log(A) when is_list(hd(A)) ->
 	Res;
 log(A) when is_number(hd(A)) ->
 	{ok, Ctx} = numer_context:new(),
-	{ok, Buf_A} = numer_buffer:new(float),
+	{ok, Buf_A} = numer_buffer:new(Ctx, float),
 	numer_buffer:write(Buf_A, A),
-	{ok, Buf_B} = numer_buffer:new(float, length(A)),
+	{ok, Buf_B} = numer_buffer:new(Ctx, float, length(A)),
 	ok = numer_kernels:log(Ctx, Buf_A, Buf_B),
 	{ok, Res} = numer_buffer:read(Buf_B),
 	ok = numer_buffer:destroy(Buf_A),

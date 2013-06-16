@@ -1,5 +1,35 @@
-TODO
-====
+
+
+Windows x64
+-----------
+
+`` bash
+git clone git://github.com/vascokk/NumEr.git
+cd NumEr
+
+set TARGET_ARCH=x64
+```
+
+Make sure you have the following bat file:
+
+``` bash
+C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\amd64\vcvars64.bat
+```
+
+With this line inside: 
+
+``` bash
+call "C:\Program Files\Microsoft SDKs\Windows\v7.1\Bin\SetEnv.cmd" /x64
+```
+
+Run the bat file.
+
+`` bash
+rebar compile
+rebar eunit suites=numer_helpers
+```
+
+TODO: MaxOS and Linux
 
 Creating vectors and matrices:
 

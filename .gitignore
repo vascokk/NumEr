@@ -12,3 +12,5 @@ tests.txt
 *.pdb
 tmp/*
 *.txt
+.idea
+*.iml

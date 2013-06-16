@@ -1,7 +1,5 @@
 set CUDA_HOME="C:\Progra~1\NVIDIA~1\CUDA\v5.0"
 cd c_src
-REM nvcc -arch=sm_35 -O2 -c -Xcompiler  -I%CUDA_HOME%\\include numer_ops.cu -o numer_ops.o
-REM nvcc -arch=sm_35 -O2 -c -Xcompiler  -I%CUDA_HOME%\\include numer_string.cu -o numer_string.o
 
 del *.o
 nvcc -O2 -c  -Xcompiler  -I%CUDA_HOME%\\include numer_kernels.cu -o numer_kernels.o

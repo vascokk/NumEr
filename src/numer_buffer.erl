@@ -44,26 +44,26 @@ new(#pc_context{ref=Ctx}, matrix, float, Orientation, Matrix) ->
     {ok, #pc_buffer{type = matrix, data_type=float, orientation=Orientation,  ref=Buf}}.    
 
 -spec ones(term(), data_type, integer()) -> {ok, buffer()}.
-ones(#pc_context{ref=Ctx}, float, Size) ->
+ones(Ctx, float, Size) ->
     {ok, Buf} = new(Ctx, float),
     ok = write(Buf, [1.0 || X<-lists:seq(1, Size)]),
     {ok, Buf}.
 
 -spec ones(term(), matrix, data_type(), orientation(), matrix_rows(), matrix_columns()) -> {ok, buffer()}.
-ones(#pc_context{ref=Ctx}, matrix, float, Orientation, Rows, Cols) ->
+ones(Ctx, matrix, float, Orientation, Rows, Cols) ->
     {ok, Buf} = new(Ctx, matrix, float, Orientation, Rows, Cols),
     ok = write(Buf, [[1.0 || _ <- lists:seq(1, Cols)] || _ <- lists:seq(1, Rows)]),
     {ok, Buf}.
 
 
 -spec zeros(term(), data_type, integer()) -> {ok, buffer()}.
-zeros(#pc_context{ref=Ctx}, float, Size) ->
+zeros(Ctx, float, Size) ->
     {ok, Buf} = new(Ctx, float),
     ok = write(Buf, [0.0 || X<-lists:seq(1, Size)]),
     {ok, Buf}.
 
 -spec zeros(term(), matrix, data_type(), orientation(), matrix_rows(), matrix_columns()) -> {ok, buffer()}.
-zeros(#pc_context{ref=Ctx}, matrix, float, Orientation, Rows, Cols) ->
+zeros(Ctx, matrix, float, Orientation, Rows, Cols) ->
     {ok, Buf} = new(Ctx, matrix, float, Orientation, Rows, Cols),
     ok = write(Buf, [[0.0 || _ <- lists:seq(1, Cols)] || _ <- lists:seq(1, Rows)]),
     {ok, Buf}.

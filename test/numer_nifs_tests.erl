@@ -19,17 +19,6 @@ create_write_destroy_float_test() ->
     ok = numer_nifs:destroy_buffer(Buf),
     numer_nifs:destroy_context(Ctx).
 
-create_write_delete_float_test() ->
-    {ok, Ctx} = numer_nifs:new_context(),
-    {ok, Buf} = numer_nifs:new_float_buffer(Ctx),
-    ok = numer_nifs:write_buffer(Buf, [1.1,1.2,1.3,1.4,1.5]),
-    ok = numer_nifs:buffer_delete(Buf, 1),
-    {ok, [1.1,1.3,1.4,1.5]} = numer_nifs:read_buffer(Buf),
-    ok = numer_nifs:buffer_delete(Buf, 0),
-    {ok, [1.3,1.4,1.5]} = numer_nifs:read_buffer(Buf),
-    numer_nifs:destroy_buffer(Buf),
-    numer_nifs:destroy_context(Ctx).
-
 create_destroy_float_matrix_test() ->  
     {ok, Ctx} = numer_nifs:new_context(),
     {ok, Buf} = numer_nifs:new_matrix_float_buffer(Ctx, 4,4, ?ROW_MAJOR),

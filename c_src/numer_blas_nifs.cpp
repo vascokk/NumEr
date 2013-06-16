@@ -82,11 +82,10 @@ ERL_NIF_TERM numer_nifs_gemm(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]
     return ATOM_OK;
 }
 
-//numer_nifs:gemv(Ctx, _m, _n, _alpha, A, X, _betha, Y),
+//numer_nifs:gemv(Ctx, transpose, _m, _n, _alpha, A, X, _betha, Y),
 ERL_NIF_TERM numer_nifs_gemv(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
     NumerContextRef *ctxRef;
-    NumerMatrixBufferRef *ref_A;
-    NumerBufferRef *ref_X, *ref_Y;
+    NumerBufferRef *ref_A, *ref_X, *ref_Y;
     unsigned long transpose;
     unsigned long  m, n;
     double alpha, beta;
@@ -105,10 +104,20 @@ ERL_NIF_TERM numer_nifs_gemv(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]
         return enif_make_badarg(env);
     }
 
-    if(ref_A->buffer->rows() != m || ref_A->buffer->cols() != n){
-        return enif_make_tuple2(env, ATOM_ERROR, enif_make_atom(env, "Matrix A dimensions do not match m,n parameters")); 
-    }
+    // std::cout<<"GEMV m="<<m<<std::endl;
+    // std::cout<<"GEMV n="<<n<<std::endl;
+    // std::cout<<"A rows="<<((NumerMatrixFloatBuffer<float>*)ref_A->buffer)->rows()<<std::endl;
+    // std::cout<<"A cols="<<((NumerMatrixFloatBuffer<float>*)ref_A->buffer)->cols()<<std::endl;
 
+    if(transpose == CUBLAS_OP_N){
+        if(((NumerMatrixFloatBuffer<float>*)ref_A->buffer)->rows() != m || ((NumerMatrixFloatBuffer<float>*)ref_A->buffer)->cols() != n){
+            return enif_make_tuple2(env, ATOM_ERROR, enif_make_atom(env, "Matrix A dimensions do not match m,n parameters")); 
+        }
+    }else{
+         if(((NumerMatrixFloatBuffer<float>*)ref_A->buffer)->rows() != n || ((NumerMatrixFloatBuffer<float>*)ref_A->buffer)->cols() != m){
+            return enif_make_tuple2(env, ATOM_ERROR, enif_make_atom(env, "Matrix A dimensions do not match m,n parameters")); 
+        }
+    }
     cuCtxSetCurrent(ctxRef->ctx);
     if(ctxRef->doublePrecision){
         NumErBlas<double> blas;
@@ -159,7 +168,7 @@ ERL_NIF_TERM numer_nifs_saxpy(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[
 
 ERL_NIF_TERM numer_nifs_transpose(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
     NumerContextRef *ctxRef;
-    NumerMatrixBufferRef *ref_A, *ref_B;
+    NumerBufferRef *ref_A, *ref_B;
     unsigned long m, n;
 
     if (argc != 3 || 
@@ -170,13 +179,13 @@ ERL_NIF_TERM numer_nifs_transpose(ErlNifEnv *env, int argc, const ERL_NIF_TERM a
         return enif_make_badarg(env);
     }
 
-    if(ref_A->buffer->rows() != ref_B->buffer->cols() ||
-        ref_A->buffer->cols() != ref_B->buffer->rows() ){
+    if(((NumerMatrixFloatBuffer<float>*)ref_A->buffer)->rows()  != ((NumerMatrixFloatBuffer<float>*)ref_B->buffer)->cols() ||
+        ((NumerMatrixFloatBuffer<float>*)ref_A->buffer)->cols() != ((NumerMatrixFloatBuffer<float>*)ref_B->buffer)->rows() ){
         return enif_make_tuple2(env, ATOM_ERROR, enif_make_atom(env, "Size A does not match the transpose size B.")); 
     }
-
-    m = ref_A->buffer->rows();
-    n = ref_A->buffer->cols();
+    
+    m = ((NumerMatrixFloatBuffer<float>*)ref_A->buffer)->rows();
+    n = ((NumerMatrixFloatBuffer<float>*)ref_A->buffer)->cols();
     
     cuCtxSetCurrent(ctxRef->ctx);
     if(ctxRef->doublePrecision){
