@@ -1,5 +1,5 @@
 
-This is a collection of Erlang NIF functions for BLAS operations on vectors and matrices. Both are natively implemented as Thrust host/device vectors and special "buffer" classes are used to transfer them from Erlang to CUDA and back. 
+This is a collection of Erlang NIF functions for BLAS operations on vectors and matrices. Both are natively implemented as [Thrust](http://thrust.github.io/) host/device vectors and special "buffer" classes are used to transfer them from Erlang to CUDA and back. 
 
 Installation on Windows x64
 ---------------------------
