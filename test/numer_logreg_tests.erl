@@ -16,10 +16,10 @@ readfile(FileName, EOL) ->
     [[bin_to_num(X) || X<-string:tokens(Y, ",")] || Y<-Lines].
 
 readfile_test() ->
-	Lines = readfile("ex2data1.txt", "\r\n").
+	Lines = readfile("../test/ex2data1.txt", "\r\n").
 
 cost_test() ->
-	TrainSet = readfile("ex2data1.txt", "\r\n"),
+	TrainSet = readfile("../test/ex2data1.txt", "\r\n"),
 	_m = length(TrainSet), % number of training examples
 	Theta = [0,0,0], %
 	X = [ lists:append([1.0], lists:sublist(TrEx, 2)) || TrEx<-TrainSet], %[1.0] - adding the bias term
@@ -29,7 +29,7 @@ cost_test() ->
 	?assertEqual( [0.693147], Cost).
 
 gradient_test() ->
-	TrainSet = fennec_logreg:readfile("ex2data1.txt", "\r\n"),
+	TrainSet = fennec_logreg:readfile("../test/ex2data1.txt", "\r\n"),
 	_m = length(TrainSet), % number of training examples
 	Theta = [0,0,0], %
 	X = [ lists:append([1.0], lists:sublist(TrEx, 2)) || TrEx<-TrainSet], %[1.0] - adding the bias term
@@ -51,7 +51,7 @@ learn_buf_test_() ->
            end}.
 
 learn() ->
-	TrainSet = readfile("ex2data1.txt", "\r\n"),
+	TrainSet = readfile("../test/ex2data1.txt", "\r\n"),
 	_m = length(TrainSet), % number of training examples
 	Theta = [0,0,0], %
 	X = [ lists:append([1.0], lists:sublist(TrEx, 2)) || TrEx<-TrainSet], %[1.0] - adding the bias term
@@ -62,7 +62,7 @@ learn() ->
 learn_buf() ->
 	{ok, Ctx} = numer_context:new(),
 	%TrainSet = numer_logreg:readfile(ex2data1.txt, "\r\n"),
-	TrainSet = readfile("ex2data1.txt", "\r\n"),
+	TrainSet = readfile("../test/ex2data1.txt", "\r\n"),
 	_m = length(TrainSet), % number of training examples
 	Theta = [0,0,0],%
 	X = [ lists:append([1.0], lists:sublist(TrEx, 2)) || TrEx<-TrainSet], %[1.0] - adding the bias term
@@ -82,7 +82,7 @@ learn_buf() ->
 learn_buf2_test() ->
 	{ok, Ctx} = numer_context:new(),
 	%TrainSet = numer_logreg:readfile(ex2data1.txt, "\r\n"),
-	TrainSet = readfile("ex2data1.txt", "\r\n"),
+	TrainSet = readfile("../test/ex2data1.txt", "\r\n"),
 	_m = length(TrainSet), % number of training examples
 	Theta = [0,0,0],%
 	X = [ lists:append([1.0], lists:sublist(TrEx, 2)) || TrEx<-TrainSet], %[1.0] - adding the bias term

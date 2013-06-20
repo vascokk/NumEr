@@ -162,6 +162,8 @@ It is much more readable and useful for one-time calculations, but in the ML "tr
 
 There is an implementation of the Logistic Regression (without regularization) algorithm. Take a look at the numer\_logreg.erl module:
 
+Windows 7, GPU - Quadro FX 1800M 1GB:
+
 ``` bash
 rebar eunit suites=numer_logreg_tests tests=learn_buf2_test
 
@@ -172,6 +174,20 @@ NOTICE: Using experimental option 'tests'
 numer_logreg_tests: learn_buf2_test...test/numer_logreg_tests.erl:108:<0.187.0>:
  Learned:[-0.02788488380610943,0.010618738830089569,6.68175402097404e-4]
 [3.557 s] ok
+=======================================================
+  Test passed.
+```
+
+The same test with MacBook Pro, with GeForce 9400M 256 MB:
+
+``` bash
+NOTICE: Using experimental option 'tests'
+    Running test function(s):
+      numer_logreg_tests:learn_buf2_test/0
+======================== EUnit ========================
+numer_logreg_tests: learn_buf2_test...test/numer_logreg_tests.erl:108:<0.197.0>: 
+ Learned:[-0.02788488380610943,0.010618738830089569,6.68175402097404e-4]
+[0.430 s] ok
 =======================================================
   Test passed.
 ```
