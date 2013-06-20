@@ -1,7 +1,7 @@
 CC=gcc
 
 CXXFLAGS = -O3 -I/usr/local/cuda/include/  -I/usr/local/lib/erlang/usr/include/
-NVCCFLAGS = $(CXXFLAGS) -c -m32 -Xcompiler -bundle,-undefined,suppress,-fno-common,-fPIC
+NVCCFLAGS = $(CXXFLAGS) -c -m64 -Xcompiler -bundle,-undefined,suppress,-fno-common,-fPIC
 
 all: compile
 

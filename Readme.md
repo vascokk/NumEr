@@ -1,5 +1,5 @@
 
-This is a collection of Erlang NIF functions for BLAS operations on vectors and matrices. Both are natively implemented as [Thrust](http://thrust.github.io/) host/device vectors and special "buffer" classes are used to transfer them from Erlang to CUDA and back. 
+This is a collection of Erlang NIF functions for BLAS operations on vectors and matrices with CUDA. Both are natively implemented as [Thrust](http://thrust.github.io/) host/device vectors and special "buffer" classes are used to transfer them from Erlang to CUDA and back. 
 
 Installation on Windows x64
 ---------------------------
@@ -26,6 +26,7 @@ call "C:\Program Files\Microsoft SDKs\Windows\v7.1\Bin\SetEnv.cmd" /x64
 Run the above bat file and compile:
 
 ``` bash
+mkdir priv
 rebar compile
 rebar eunit suites=numer_helpers_tests
 ```
@@ -62,7 +63,26 @@ module 'numer_helpers_tests'
   All 21 tests passed.
 ```
 
-TODO: Mac OS X and Linux
+Mac OS X
+--------------
+
+Strictly follow NVIDIA Mac OS X [Getting Started](http://docs.nvidia.com/cuda/cuda-getting-started-guide-for-mac-os-x/) and set env variables:
+
+``` bash
+export PATH=/Developer/NVIDIA/CUDA-5.0/bin:$PATH
+export DYLD_LIBRARY_PATH=/Developer/NVIDIA/CUDA-5.0/lib:$DYLD_LIBRARY_PATH
+```
+
+Compile and run eunit:
+
+``` bash
+mkdir priv
+./rebar compile
+./rebar eunit suites=numer_helpers_tests
+```
+
+
+TODO: Linux
 
 Operations with vectors and matrices
 ------------------------------
