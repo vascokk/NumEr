@@ -164,7 +164,7 @@ It is much more readable and useful for one-off calculations, but in the ML "tra
 Machine Learning with Erlang & CUDA - "Logistic Regression"
 ------------------------------------------------------------
 
-There is an implementation of the Logistic Regression (without regularization) algorithm. Take a look at the numer\_logreg.erl module:
+There is an implementation of the Logistic Regression (without regularization) learning function with Gradient Descent optimization. Take a look at learn_buf() and gradient_descent() in the numer\_logreg.erl module and run the eunit test:
 
 Windows 7, GPU - Quadro FX 1800M 1GB:
 
@@ -181,6 +181,8 @@ numer_logreg_tests: learn_buf2_test...test/numer_logreg_tests.erl:108:<0.187.0>:
 =======================================================
   Test passed.
 ```
+
+In learn_buf2_test() all the "buffers" needed are created upfront and passed to the NIFs in order to avoid multiple buffer creations and transfers during the iterations. 
 
 The same test with MacBook Pro, with GeForce 9400M 256 MB:
 
