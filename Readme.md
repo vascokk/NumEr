@@ -1,13 +1,17 @@
 
 This is a collection of Erlang NIF functions for BLAS operations on vectors and matrices with CUDA. Both are natively implemented as [Thrust](http://thrust.github.io/) host/device vectors and special "buffer" classes are used to transfer them from Erlang to CUDA and back. 
 
-Installation on Windows x64
+Installation on Windows x64 
 ---------------------------
 
 ``` bash
 git clone git://github.com/vascokk/NumEr.git
 cd NumEr
+```
 
+All the commands from this point should be run in a VC++ 10.0 command-line window
+
+``` bash
 set TARGET_ARCH=x64
 ```
 
@@ -143,7 +147,7 @@ gemv_test()->
 Using "helpers" module
 ----------------------
 
-Since using buffer operations can make the code awkward to read, there is also a helper module - numer\_helpers.erl, wich can be used for prototyping the algorithms. WARNING - it is extremely slow and suitable ONLY for prototyping or single operations (do not use this module in iterative algorithms). Here is how you can use it:
+Since using buffer operations can make the code awkward to read, there is also a helper module - numer\_helpers.erl, wich can be used for prototyping the algorithms. WARNING - do not use this module in iterative algorithms (e.g. Machine Learning). Use it for prototyping or one-off calculations with big matrices/vectors. Here is how:
 
 ``` erlang
 gemv_2_test()->
@@ -155,10 +159,10 @@ gemv_2_test()->
     ?assertEqual([60.0,75.0], Res).
 ```
 
-It is much more readable and useful for one-time calculations, but in the ML "training" stage (with hundreds of iterations) it will be unusable, due to the multiple buffer transfers. 
+It is much more readable and useful for one-off calculations, but in the ML "training" stage (with hundreds of iterations) it will be unusable, due to the multiple buffer transfers. 
 
-"Logistic Regression"
----------------------
+Machine Learning with Erlang & CUDA - "Logistic Regression"
+------------------------------------------------------------
 
 There is an implementation of the Logistic Regression (without regularization) algorithm. Take a look at the numer\_logreg.erl module:
 
@@ -192,6 +196,6 @@ numer_logreg_tests: learn_buf2_test...test/numer_logreg_tests.erl:108:<0.197.0>:
   Test passed.
 ```
 
-The numer\_ml.erl module contains a C++ implementation (via NIFs) of Logistic Regression, while the numer\_logreg.erl is using buffers and numer_blas NIFs. The first one I used to compare the speed between all-native and buffers+NIFs implementations.
+The numer\_ml.erl module contains a C++ implementation (via single NIF function) of Logistic Regression, while the numer\_logreg.erl is using numer_blas.erl module. The first one I used to compare the speed between the "native" and "using NumEr modules" implementations. There is considerable difference between the two on Windows (using NumEr modules - 3.5 sec, using single NIF - under 1 sec)  and almost no difference on Mac (both - under 0.5 sec).
 
 The project is still a work in progress and needs a lot of polishing and if anyone is willing to give a hand I'll be more than happy. Any suggestions to improve the framework are also very welcome.
