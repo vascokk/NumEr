@@ -1,4 +1,3 @@
-
 This is a collection of Erlang NIF functions for BLAS operations on vectors and matrices with CUDA. Both are natively implemented as [Thrust](http://thrust.github.io/) host/device vectors and special "buffer" classes are used to transfer them from Erlang to CUDA and back. 
 
 Installation on Windows x64 
@@ -9,7 +8,7 @@ git clone git://github.com/vascokk/NumEr.git
 cd NumEr
 ```
 
-All the commands from this point should be run in a VC++ 10.0 command-line window
+All the commands from this point forward should be executed in a VC++ 10.0 command-line window
 
 ``` bash
 set TARGET_ARCH=x64
@@ -21,13 +20,13 @@ Make sure you have the following bat file:
 C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\amd64\vcvars64.bat
 ```
 
-With this line inside: 
+with this line inside: 
 
 ``` bash
 call "C:\Program Files\Microsoft SDKs\Windows\v7.1\Bin\SetEnv.cmd" /x64
 ```
 
-Run the above bat file and compile:
+Execute the above bat file and compile:
 
 ``` bash
 mkdir priv
